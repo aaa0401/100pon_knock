@@ -3,6 +3,7 @@ from copy import *
 
 from math import *
 from copy import *
+import re
 
 def q_0(from_str):
     to_str = ""
@@ -173,7 +174,6 @@ def q_20(file_name):
 
 def q_21(text):
     # searchは一個のみ、findallは文字列のみ, finaiterでsearchの複数版、 ()で囲むと取り出せる
-    import re
     match = re.findall(r"\[\[Category:.+\]\]", text)
     for i in match:
         print(i)
@@ -181,12 +181,34 @@ def q_21(text):
 
 def q_22(text):
     # searchは一個のみ、findallは文字列のみ, finaiterでsearchの複数版、 ()で囲むと取り出せる
-    import re
     match = re.finditer(r"\[\[Category:(.+)\]\]", text)
     # ()で囲んだ場合はそのままでも出せる .group(0)で元の文字列、　複数の()は1から順番に取り出せる
     for i in match:
         print(i.group(1))
 
+
+def q_23(text):
+    match = re.finditer(r"(=+).+=+", text)
+    for i in match:
+        print(i.group(0) + ":" + str(len(i.group(1))))
+
+
+def q_24(text):
+    # ファイルは[[ファイル:Wikipedia-logo-v2-ja.png|thumb|説明文]]という形式。知らんがな
+    match = re.finditer(r"\[\[ファイル:(.+)\|", text)
+    for i in match:
+        print(i.group(0) + ":" + i.group(1))
+
+
+def q_25(text):
+    # MULTILINE 複数行 DOTALL 改行無視
+    match = re.finditer(r"^\{\{基礎情報.*$(.*)^\}\}", text, re.MULTILINE + re.DOTALL)
+    result = dict()
+    for i in match:
+        pattern =r'^\|(.+?)\s*=\s*(.+?)(?:(?=\n\|)|(?=\n$))'
+        result(re.findall(pattern, i.group(0), re.MULTILINE + re.DOTALL))
+    for i, j in result.items():
+        print(i + ":" + j)
 
 def main():
     # print(q_0("stressed"))
@@ -208,8 +230,12 @@ def main():
     # q_15("popular_name.txt", 3)
     # q_16("popular_name.txt", 4)
     uk = q_20("jawiki-country.json.gz")
-    q_21(uk)
-    q_22(uk)
+    # print(uk)
+    # q_21(uk)
+    # q_22(uk)
+    # q_23(uk)
+    # q_24(uk)
+    #q_25(uk)
 
 if __name__ == '__main__':
     main()
