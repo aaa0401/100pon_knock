@@ -159,11 +159,33 @@ def q_16(file_name, N):
 
 
 def q_20(file_name):
+    # JSONデータが複数ある場合json.loads
     import gzip, json
+    data = []
     with gzip.open(file_name, "r") as gf:
-        data = json.load(gf, "r")
-    for i in data:
+        for i in gf:
+            line = json.loads(i)
+            if line["title"] == "イギリス":
+                target = line["text"]
+                break
+    return target
+
+
+def q_21(text):
+    # searchは一個のみ、findallは文字列のみ, finaiterでsearchの複数版、 ()で囲むと取り出せる
+    import re
+    match = re.findall(r"\[\[Category:.+\]\]", text)
+    for i in match:
         print(i)
+
+
+def q_22(text):
+    # searchは一個のみ、findallは文字列のみ, finaiterでsearchの複数版、 ()で囲むと取り出せる
+    import re
+    match = re.finditer(r"\[\[Category:(.+)\]\]", text)
+    # ()で囲んだ場合はそのままでも出せる .group(0)で元の文字列、　複数の()は1から順番に取り出せる
+    for i in match:
+        print(i.group(1))
 
 
 def main():
@@ -185,8 +207,9 @@ def main():
     # q_14("popular_name.txt", 3)
     # q_15("popular_name.txt", 3)
     # q_16("popular_name.txt", 4)
-    q_20("jawiki-country.json.gz")
-
+    uk = q_20("jawiki-country.json.gz")
+    q_21(uk)
+    q_22(uk)
 
 if __name__ == '__main__':
     main()
