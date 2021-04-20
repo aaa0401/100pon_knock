@@ -1,3 +1,4 @@
+import math
 from math import *
 from copy import *
 
@@ -85,53 +86,39 @@ def q_9(statement):
 
 
 def q_10(file_name):
-    hightemap = open(file_name, "r", encoding="shift_jis")
-    lines = hightemap.readlines()
-    return len(lines)
+    # with内でreturnしても大丈夫大宰府天満宮
+    with open(file_name, "r",) as f:
+        return len(f.readlines())
 
 
 def q_11(file_name):
-    hightemap = open(file_name, "r", encoding="shift_jis")
-    lines = hightemap.readlines()
-    for i in lines:
-        if(i == "\t"):
-            i = " "
-    hightemap.close()
-    return lines[0]
+    with open(file_name, "r") as f:
+        # for文のiに代入はできない
+        lines = f.readlines()
+        before = lines[0]
+        for i in range(len(lines)):
+            lines[i] = " ".join(lines[i].split("\t"))
+        print(before + "→" + lines[0])
 
 
 def q_12(file_name):
-    hightemap = open(file_name, "r", encoding="utf-8")
-    col1 = open("col1.txt", "w", encoding="utf-8")
-    col2 = open("col2.txt", "w", encoding="utf-8")
-    lines = hightemap.readlines()
-    for aline in lines:
-        columned_line = aline.split()
+    popular_name = open(file_name, "r")
+    col1 = open("col1.txt", "w")
+    col2 = open("col2.txt", "w")
+    for i in popular_name:
+        columned_line = i.split()
         col1.write(columned_line[0] + "\n")
         col2.write(columned_line[1] + "\n")
-    hightemap.close()
+    popular_name.close()
     col1.close()
     col2.close()
 
 
 def q_13(col1_name, col2_name, marge_file_name):
-    col1 = open(col1_name, "r")
-    col2 = open(col2_name, "r")
-    marge_file = open(marge_file_name, "w")
-    col1_lines = col1.readlines()
-    col2_lines = col2.readlines()
-    for i in range(len(col1_lines)):
-        print(col1_lines[i].strip("\n"))
-        marge_file.write(col1_lines[i].strip("\n") + "\t" + col2_lines[i])
-    col1.close()
-    col2.close()
-    marge_file.close()
+    with open(col1_name, "r") as col1, open(col2_name, "r") as col2, open(marge_file_name, "w") as marge_file:
+        for i, j in zip(col1, col2):
+            marge_file.write(i.strip("\n") + "\t" + j)
 
-
-# def q_13_revised(col1_name, col2_name, marge_file_name):
-#   with open("col1.txt") as col1_f, open("col2.txt") as col2_f, open("marge.txt") as marge_f:
-#      for col1_f, col2_f in zip(col1_f, col2_f):
-#         marge_f.write(col1_f.)
 
 def q_14(file_name, N):
     with open(file_name) as f:
@@ -148,14 +135,14 @@ def q_15(file_name, N):
 
 
 def q_16(file_name, N):
-    with open(file_name) as f, open("parsed_file.txt", "w") as d:
+    with open("q_16test.txt") as f, open("parsed_file.txt", "w") as d:
         lines = f.readlines()
         if N < 1 or N > len(lines):
             N = 1
-        mark_index = len(lines) / N
-        for i in len(lines):
+        mark_index = math.ceil(len(lines) / N)
+        for i in range(len(lines)):
             d.write(lines[i])
-            if i == mark_index:
+            if (i+1) % mark_index == 0 and i != 0:
                 d.write("\n")
 
 
@@ -222,20 +209,20 @@ def main():
     # print(q_7("15", "ゴリラ", "気性が荒い"))
     # print(q_8("abcABC"))
     # print(q_8("zyxABC"))
-    # print(q_10("popular_name.txt"))
-    # print(q_11("popular_name.txt"))
-    # q_12("popular_name.txt")
-    # q_13("col1.txt", "col2.txt", "marge.txt")
-    # q_14("popular_name.txt", 3)
-    # q_15("popular_name.txt", 3)
-    # q_16("popular_name.txt", 4)
+    print(q_10("popular_name.txt"))
+    print(q_11("popular_name.txt"))
+    q_12("popular_name.txt")
+    q_13("col1.txt", "col2.txt", "marge.txt")
+    q_14("popular_name.txt", 3)
+    q_15("popular_name.txt", 3)
+    q_16("popular_name.txt", 3)
     uk = q_20("jawiki-country.json.gz")
     # print(uk)
     # q_21(uk)
     # q_22(uk)
     # q_23(uk)
     # q_24(uk)
-    #q_25(uk)
+    # q_25(uk)
 
 if __name__ == '__main__':
     main()
